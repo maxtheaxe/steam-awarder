@@ -47,11 +47,11 @@ def start_driver(headless = False):
 	return webdriver.Chrome(options = options, executable_path = chromedriver)
 
 # give_awards() - gives all possible rewards for all reviews for a given user
-def give_awards(driver, given_url):
+def give_awards(driver, given_url, max_pages = 3):
 	# navigate to given url (should be reviews page)
 	driver.get(given_url)
-	# for a maximum of 20 pages of reviews
-	for n in range(20):
+	# for a maximum of given number of pages of reviews (default 3)
+	for n in range(max_pages):
 		# collect award buttons on current page
 		award_buttons = collect_award_buttons(driver)
 		# loop over collected buttons
@@ -131,6 +131,16 @@ def give_individual_award(driver):
 	# return True to indicate one was given successfully (or at least one could've been)
 	return True
 
+# run_with_target() - takes in a url from cli and gives awards to that user
+def run_with_target(driver):
+	# ask user for url to target's reviews page
+	reviews_url = input("\tWhat is the link for the target's reviews page?\n\t(Paste it in and press Enter)\n\n\t")
+	# give awards to that url
+	give_awards(driver, reviews_url)
+	# alert them it's finished giving awards for that user
+	print("\n\tAwards successfully given.")
+	return
+
 def main(argv):
 	# display title
 	print("\n\t--- Steam Awarder by Max ---\n")
@@ -138,7 +148,9 @@ def main(argv):
 	input("\tWarning: Use this program at your own risk!\n\t(press Enter to continue)\n\n\t")
 	# create the driver (browser window) and keep track of it
 	main_driver = launch()
-
+	# while program is running, accept input in form of links to reviews pages
+	while True:
+		run_with_target(main_driver)
 
 if __name__ == '__main__':
 	print("\n\t--- Steam Awarder by Max ---\n")
