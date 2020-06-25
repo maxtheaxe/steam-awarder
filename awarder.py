@@ -141,7 +141,7 @@ def run_with_target(driver):
 	print("\n\tAwards successfully given.")
 	return
 
-def main(argv):
+def main():
 	# display title
 	print("\n\t--- Steam Awarder by Max ---\n")
 	# warn users about using program
