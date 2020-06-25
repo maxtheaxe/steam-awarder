@@ -153,24 +153,4 @@ def main(argv):
 		run_with_target(main_driver)
 
 if __name__ == '__main__':
-	print("\n\t--- Steam Awarder by Max ---\n")
-	# warn users about using program
-	input("\tWarning: Use this program at your own risk!\n\t(press Enter to continue)\n\n\t")
-	bot_list = cavalry(num_bots, headless, verbose, proxy) # store the bots in a list for easy closing later
-	# Tell Python to run the handler() function when SIGINT is recieved
-	signal.signal(signal.SIGINT, signal_handler)
-	print("\n\tUse Control + C to close all bots.") # print instructions
-	# wait 25 min for login code (this was a workaround for when I had issues getting codes)
-	# time.sleep(1500)
-	while True:
-		# run maintenance every 20 minutes
-		try:
-			group_maintenance(bot_list)
-		except:
-			print("\tCheck your internet speed--it may not be fast enough to run this.")
-		time.sleep(1200)
-		# ask for a stream link
-		# selected_stream = input("\tPaste a stream link and hit enter.\n")
-		# tell all the bots to enter that stream
-		# enter_stream(selected_stream)
-		pass
+	main()
