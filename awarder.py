@@ -118,8 +118,6 @@ def give_review_awards(driver):
 	time.sleep(3)
 	# try to give an individual award and store the result
 	result = give_individual_award(driver)
-	# click the close button to exit modal overlay
-	driver.find_element_by_class_name('closeButton').click()
 	# wait for modal overlay to close
 	wait2 = WebDriverWait(driver, 10)
 	element2 = wait2.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'FullModalOverlay')))
@@ -148,6 +146,8 @@ def give_individual_award(driver):
 		next_button = driver.find_element_by_xpath(
 			"//button[@class='awardmodal_SubmitButton_2FENd unstyledbutton_UnstyledButton_1hcJa']")
 		next_button.click()
+	# click the close button to exit modal overlay
+	driver.find_element_by_class_name('closeButton').click()
 	# return True to indicate one was given successfully (or at least one could've been)
 	return True
 
