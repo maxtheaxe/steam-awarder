@@ -65,11 +65,11 @@ def give_awards(driver, given_url, max_pages = 3):
 		print("\taward buttons: ", award_buttons)
 		# loop over collected buttons
 		for i in range(len(award_buttons)):
-			# click the current button
-			award_buttons[i].click()
 			# now give all possible individual awards for that review
 			# 10 accounts for future possible additions, without allowing total runaway
-			for x in range(15):
+			for x in range(10):
+				# click the current button
+				award_buttons[i].click()
 				# run give review awards and store result
 				result = give_review_awards(driver)
 				# if result is false, break out of loop
