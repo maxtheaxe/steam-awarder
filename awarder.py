@@ -6,7 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-import sys
 import re
 import time
 import random
@@ -15,20 +14,28 @@ import os
 import inspect
 import csv
 from win10toast import ToastNotifier
+import argparse
 
 # set path to chrome driver for packaging purposes
 # ref: https://stackoverflow.com/questions/41030257/is-there-a-way-to-bundle-a-binary-file-such-as-chromedriver-with-a-single-file
 current_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe() ))[0]))
 
+# configure command line arguments with argparse
+parser = argparse.ArgumentParser(description='easily give large numbers of steam awards')
+parser.add_argument(
+	'--urlfile',
+	type = str,
+	default = None,
+	help = 'input filename/path for external URL list')
+args = parser.parse_args()
+
 # launch() - launch sequence to get driver started, bring to login page
 def launch(headless = False, verbose = False):
-	# print("\tLaunching a bot...\n")
 	driver = start_driver(headless) # start the driver and store it (will be returned)
 	driver.get("https://steamcommunity.com/login/") # open steam login page
 	toaster = ToastNotifier()
 	toaster.show_toast("Steam Awarder","Please log in via the browser window.")
 	input("\n\tHit Enter to continue...") # wait for user prompt to resume
-	# print("\t", bot_name, "successfully launched.\n")
 	return driver # return driver so it can be stored and used later
 
 # start_driver() - starts the webdriver and returns it
@@ -132,22 +139,28 @@ def give_individual_award(driver):
 	return True
 
 # run_with_target() - takes in a url from cli and gives awards to that user
-def run_with_target(driver):
-	# ask user for url to target's reviews page
-	reviews_url = input("\tWhat is the link for the target's reviews page? "\
-		"\n\t(Paste it in and press Enter, or leave it blank to award the creator)\n\n\t")
-	# check if they intentionally left it blank
-	if (reviews_url == ""):
-		# let them know they left it blank, and give them an option to continue
-		secondary_url = input("\tYou left it blank, indicating you want to target " \
-			"the creator of the program. \n\t(Leave it blank again to confirm, or enter " \
-			"your intended target.)\n\n\t")
-		# if they continue, feed creator's (my) link to program as target
-		if (secondary_url == ""):
-			reviews_url = "https://steamcommunity.com/id/JewishJuggernaut/recommended/"
-		# otherwise, continue with the link they just entered
-		else:
-			reviews_url = secondary_url
+def run_with_target(driver, reviews_url = None):
+	# if link was passed as an argument (probably loaded from file)
+	if (reviews_url != None):
+		# then print link currently being tested 
+		print("\tCurrent Target: {}\n".format(reviews_url))
+	# otherwise, if a reviews url isn't passed as an argument
+	else:
+		# ask user for url to target's reviews page
+		reviews_url = input("\tWhat is the link for the target's reviews page? "\
+			"\n\t(Paste it in and press Enter, or leave it blank to award the creator)\n\n\t")
+		# check if they intentionally left it blank
+		if (reviews_url == ""):
+			# let them know they left it blank, and give them an option to continue
+			secondary_url = input("\tYou left it blank, indicating you want to target " \
+				"the creator of the program. \n\t(Leave it blank again to confirm, or enter " \
+				"your intended target.)\n\n\t")
+			# if they continue, feed creator's (my) link to program as target
+			if (secondary_url == ""):
+				reviews_url = "https://steamcommunity.com/id/JewishJuggernaut/recommended/"
+			# otherwise, continue with the link they just entered
+			else:
+				reviews_url = secondary_url
 	# check if given url is valid (create regex for reviews link)
 	url_pattern = re.compile(
 		"^https://steamcommunity.com/id/[a-zA-z0-9]{2,}/recommended/?$")
@@ -164,16 +177,34 @@ def run_with_target(driver):
 	print("\n\tAwards successfully given.\n")
 	return
 
-def main():
+# load_from_file() - loads a list of links from file
+# ref: https://codippa.com/how-to-read-a-file-line-by-line-into-a-list-in-python/
+def load_from_file(file_name):
+	# open file in read mode
+	with open(file_name, 'r') as file_handle:
+		# read file content into list broken up by line
+		lines = file_handle.readlines()
+	return lines # return list of urls
+
+def main(args):
 	# display title
 	print("\n\t--- Steam Awarder by Max ---\n")
 	# warn users about using program
 	input("\tWarning: Use this program at your own risk!\n\t(press Enter to continue)\n\n\t")
 	# create the driver (browser window) and keep track of it
 	main_driver = launch()
-	# while program is running, accept input in form of links to reviews pages
-	while True:
-		run_with_target(main_driver)
+	# if external list of URLs is provided
+	if (args.urlfile == None):
+		# then draw from there
+		url_list = load_from_file(urlfile)
+		# loop over list of URLs
+		for i in range(len(url_list)):
+			# give awards to each in list
+			run_with_target(url_list[i])
+	# otherwise, get links to reviews pages from user input
+	else:
+		while True:
+			run_with_target(main_driver)
 
 if __name__ == '__main__':
 	main()
