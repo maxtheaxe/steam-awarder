@@ -86,9 +86,9 @@ def collect_award_buttons(driver):
 # reference: https://stackoverflow.com/a/32713128
 def advance_page(driver):
 	# collect all page buttons and store in list
-	page_buttons = driver.get_elements_by_class_name('pagebtn')
+	page_buttons = driver.find_elements_by_class_name('pagebtn')
 	# check if secondary button(s) are disabled
-	if (page_buttons[1].get_attribute('class').contains('disabled')):
+	if ("disabled" in page_buttons[1].get_attribute('class').split(' ')):
 		# then return false, because we've reached the end
 		return False
 	# otherwise, click the secondary button and advance the page
