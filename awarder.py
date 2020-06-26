@@ -152,7 +152,7 @@ def give_individual_award(driver):
 	return True
 
 # run_with_target() - takes in a url from cli and gives awards to that user
-def run_with_target(driver, reviews_url = None):
+def run_with_target(driver, reviews_url = None, max_pages = 3):
 	# if link was passed as an argument (probably loaded from file)
 	if (reviews_url != None):
 		# then print link currently being tested 
@@ -183,9 +183,9 @@ def run_with_target(driver, reviews_url = None):
 		print("\n\tError: Invalid reviews link "\
 			"(it should look something like:\n\t"\
 			"https://steamcommunity.com/id/JewishJuggernaut/recommended/).\n")
-		return run_with_target(driver)
+		return run_with_target(driver, None, max_pages)
 	# give awards to that url
-	give_awards(driver, reviews_url)
+	give_awards(driver, reviews_url, max_pages)
 	# alert them it's finished giving awards for that user
 	print("\n\tAwards successfully given.\n")
 	return
