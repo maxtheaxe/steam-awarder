@@ -85,7 +85,8 @@ def give_awards(driver, given_url, max_pages = 3):
 # reference: https://www.guru99.com/xpath-selenium.html
 def collect_award_buttons(driver):
 	# find all award buttons on the given page and store 'em in a list
-	award_buttons = driver.find_elements_by_xpath("//span[@onclick='UserReview_Award']")
+	award_buttons = driver.find_elements_by_xpath(
+		"//div[@class='control_block']//span[@class='btn_grey_grey btn_small_thin ico_hover']")
 	# return the list of buttons
 	return award_buttons
 
@@ -181,12 +182,12 @@ def run_with_target(driver, reviews_url = None):
 # ref: https://codippa.com/how-to-read-a-file-line-by-line-into-a-list-in-python/
 def load_from_file(file_name):
 	# open file in read mode
-	with open(file_name, 'r') as file_handle:
-		# read file content into list broken up by line
-		lines = file_handle.readlines()
+	with open(file_name, 'r') as filename:
+		# read file content into list broken up by line (w/o newline chars)
+		lines = [line.rstrip() for line in filename]
 	return lines # return list of urls
 
-def main(args):
+def main():
 	# display title
 	print("\n\t--- Steam Awarder by Max ---\n")
 	# warn users about using program
@@ -194,13 +195,13 @@ def main(args):
 	# create the driver (browser window) and keep track of it
 	main_driver = launch()
 	# if external list of URLs is provided
-	if (args.urlfile == None):
+	if (args.urlfile != None):
 		# then draw from there
-		url_list = load_from_file(urlfile)
+		url_list = load_from_file(args.urlfile)
 		# loop over list of URLs
 		for i in range(len(url_list)):
 			# give awards to each in list
-			run_with_target(url_list[i])
+			run_with_target(main_driver, url_list[i])
 	# otherwise, get links to reviews pages from user input
 	else:
 		while True:
