@@ -132,7 +132,7 @@ def give_individual_award(driver):
 	review_awards = driver.find_elements_by_xpath(
 		"//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa']")
 	# testing
-	print("\treview awards: ", review_awards)
+	# print("\treview awards: ", review_awards)
 	# if there are any left "ungiven"
 	if (len(review_awards) > 0):
 		# then select the first one
@@ -224,7 +224,7 @@ def main():
 		while True:
 			# if a custom page limit is provided
 			if (args.pagelimit != None):
-				run_with_target(main_driver, , max_pages = args.pagelimit)
+				run_with_target(main_driver, max_pages = args.pagelimit)
 			else: # otherwise use default
 				run_with_target(main_driver)
 
