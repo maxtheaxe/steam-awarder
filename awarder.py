@@ -67,12 +67,18 @@ def give_awards(driver, given_url, max_pages = 3):
 			award_buttons[i].click()
 			# now give all possible individual awards for that review
 			# 10 accounts for future possible additions, without allowing total runaway
-			for x in range(10):
-				# run give review awards and store result
-				result = give_review_awards(driver)
-				# if result is false, break out of loop
-				if (result == False):
-					break
+			for x in range(15):
+				try: # handle steam server loading issues
+					# run give review awards and store result
+					result = give_review_awards(driver)
+					# if result is false, break out of loop
+					if (result == False):
+						break
+				except: # refresh and try again
+					# let user know it had an error
+					print("\n\tCouldn't complete award properly — trying again.\n")
+					# navigate to given url (should be reviews page)
+					driver.get(given_url)
 		# now move on to next page of reviews
 		page_result = advance_page(driver)
 		# if there wasn't another page to move on to
