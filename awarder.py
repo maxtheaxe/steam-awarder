@@ -176,7 +176,7 @@ def run_with_target(driver, reviews_url = None, max_pages = 3):
 				reviews_url = secondary_url
 	# check if given url is valid (create regex for reviews link)
 	url_pattern = re.compile(
-		"^https://steamcommunity.com/id/[a-zA-z0-9]{2,}/recommended/?$")
+		"^https://steamcommunity.com/id/[a-zA-z0-9]{2,}/recommended/?(/\\?p=[0-9]+)?$")
 	# if not, call self again
 	if not (bool(url_pattern.match(reviews_url))):
 		# let the user know they messed up
