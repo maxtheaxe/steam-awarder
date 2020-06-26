@@ -13,7 +13,6 @@ import signal
 import os
 import inspect
 import csv
-from win10toast import ToastNotifier
 import argparse
 
 # set path to chrome driver for packaging purposes
@@ -27,14 +26,18 @@ parser.add_argument(
 	type = str,
 	default = None,
 	help = 'input filename/path for external URL list')
+parser.add_argument(
+	'--pagelimit',
+	type = int,
+	default = None,
+	help = 'input custom limit for max number of pages to award')
 args = parser.parse_args()
 
 # launch() - launch sequence to get driver started, bring to login page
 def launch(headless = False, verbose = False):
 	driver = start_driver(headless) # start the driver and store it (will be returned)
 	driver.get("https://steamcommunity.com/login/") # open steam login page
-	toaster = ToastNotifier()
-	toaster.show_toast("Steam Awarder","Please log in via the browser window.")
+	print("\n\tPlease log in via the browser window.")
 	input("\n\tHit Enter to continue...") # wait for user prompt to resume
 	return driver # return driver so it can be stored and used later
 
@@ -62,7 +65,7 @@ def give_awards(driver, given_url, max_pages = 3):
 		# collect award buttons on current page
 		award_buttons = collect_award_buttons(driver)
 		# testing
-		print("\taward buttons: ", award_buttons)
+		# print("\taward buttons: ", award_buttons)
 		# loop over collected buttons
 		for i in range(len(award_buttons)):
 			# now give all possible individual awards for that review
@@ -209,12 +212,21 @@ def main():
 		url_list = load_from_file(args.urlfile)
 		# loop over list of URLs
 		for i in range(len(url_list)):
-			# give awards to each in list
-			run_with_target(main_driver, url_list[i])
+			# if a custom page limit is provided
+			if (args.pagelimit != None):
+				# give awards to each in list with custom limit
+				run_with_target(main_driver, url_list[i], max_pages = args.pagelimit)
+			else: # otherwise use default
+				# give awards to each in list
+				run_with_target(main_driver, url_list[i])
 	# otherwise, get links to reviews pages from user input
 	else:
 		while True:
-			run_with_target(main_driver)
+			# if a custom page limit is provided
+			if (args.pagelimit != None):
+				run_with_target(main_driver, , max_pages = args.pagelimit)
+			else: # otherwise use default
+				run_with_target(main_driver)
 
 if __name__ == '__main__':
 	main()
