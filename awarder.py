@@ -61,6 +61,8 @@ def give_awards(driver, given_url, max_pages = 3):
 	for n in range(max_pages):
 		# collect award buttons on current page
 		award_buttons = collect_award_buttons(driver)
+		# testing
+		print("\taward buttons: ", award_buttons)
 		# loop over collected buttons
 		for i in range(len(award_buttons)):
 			# click the current button
@@ -68,17 +70,11 @@ def give_awards(driver, given_url, max_pages = 3):
 			# now give all possible individual awards for that review
 			# 10 accounts for future possible additions, without allowing total runaway
 			for x in range(15):
-				try: # handle steam server loading issues
-					# run give review awards and store result
-					result = give_review_awards(driver)
-					# if result is false, break out of loop
-					if (result == False):
-						break
-				except: # refresh and try again
-					# let user know it had an error
-					print("\n\tCouldn't complete award properly — trying again.\n")
-					# navigate to given url (should be reviews page)
-					driver.get(given_url)
+				# run give review awards and store result
+				result = give_review_awards(driver)
+				# if result is false, break out of loop
+				if (result == False):
+					break
 		# now move on to next page of reviews
 		page_result = advance_page(driver)
 		# if there wasn't another page to move on to
@@ -120,7 +116,8 @@ def give_review_awards(driver):
 	# try to give an individual award and store the result
 	result = give_individual_award(driver)
 	# wait for modal overlay to close
-	element = wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'FullModalOverlay')))
+	wait2 = WebDriverWait(driver, 10)
+	element2 = wait2.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'FullModalOverlay')))
 	# return result, so the parent function knows whether to try again for that review
 	return result
 
@@ -129,6 +126,8 @@ def give_individual_award(driver):
 	# store any "ungiven" individual award buttons on popup in list
 	review_awards = driver.find_elements_by_xpath(
 		"//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa']")
+	# testing
+	print("\treview awards: ", review_awards)
 	# if there are any left "ungiven"
 	if (len(review_awards) > 0):
 		# then select the first one
@@ -145,7 +144,7 @@ def give_individual_award(driver):
 			"//button[@class='awardmodal_SubmitButton_2FENd unstyledbutton_UnstyledButton_1hcJa']")
 		next_button.click()
 	# click the close button to exit modal overlay
-		driver.find_element_by_class_name('closeButton').click()
+	driver.find_element_by_class_name('closeButton').click()
 	# return True to indicate one was given successfully (or at least one could've been)
 	return True
 
