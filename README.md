@@ -12,9 +12,6 @@ _I'm not gonna build executables unless there is demand_
 * Clone the repository to a local directory
 * Install the dependencies
 * [Download appropriate chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home) and place in same directory
-* Create `account-combos.csv` (username, password)
-* Optional: Create `proxy-list.txt` (one proxy per line)
-* Optional: Create `proxy-auth.txt` (username \n password)
 
 ## Usage
 * Run `awarder.py`
