@@ -138,6 +138,8 @@ def give_individual_award(driver):
 		next_button = driver.find_element_by_xpath(
 			"//button[@class='awardmodal_SubmitButton_2FENd unstyledbutton_UnstyledButton_1hcJa']")
 		next_button.click()
+	# click the close button to exit modal overlay
+		driver.find_element_by_class_name('closeButton').click()
 	# return True to indicate one was given successfully (or at least one could've been)
 	return True
 
