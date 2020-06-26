@@ -109,6 +109,8 @@ def give_review_awards(driver):
 	# wait for modal overlay to appear (looks for class)
 	wait = WebDriverWait(driver, 10)
 	element = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'FullModalOverlay')))
+	# manual wait for steam server issues
+	time.wait(3)
 	# try to give an individual award and store the result
 	result = give_individual_award(driver)
 	# wait for modal overlay to close
