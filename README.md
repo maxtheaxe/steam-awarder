@@ -25,3 +25,4 @@ _I'm not gonna build executables unless there is demand_
 * I rushed this to make sure people could use it right away
 * Could _definitely_ be cleaned up, open to pull requests
 * Throw a few awards [my way](https://steamcommunity.com/id/JewishJuggernaut/) if you feel like thanking me
+* Thanks to [HeyItzWerty](https://steamcommunity.com/id/HeyItzWerty) for help with testing
