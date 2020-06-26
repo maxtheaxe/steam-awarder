@@ -134,11 +134,34 @@ def give_individual_award(driver):
 # run_with_target() - takes in a url from cli and gives awards to that user
 def run_with_target(driver):
 	# ask user for url to target's reviews page
-	reviews_url = input("\tWhat is the link for the target's reviews page?\n\t(Paste it in and press Enter)\n\n\t")
+	reviews_url = input("\tWhat is the link for the target's reviews page? "\
+		"\n\t(Paste it in and press Enter, or leave it blank to award the creator)\n\n\t")
+	# check if they intentionally left it blank
+	if (reviews_url == ""):
+		# let them know they left it blank, and give them an option to continue
+		secondary_url = input("\tYou left it blank, indicating you want to target " \
+			"the creator of the program. \n\t(Leave it blank again to confirm, or enter " \
+			"your intended target.)\n\n\t")
+		# if they continue, feed creator's (my) link to program as target
+		if (secondary_url == ""):
+			reviews_url = "https://steamcommunity.com/id/JewishJuggernaut/recommended/"
+		# otherwise, continue with the link they just entered
+		else:
+			reviews_url = secondary_url
+	# check if given url is valid (create regex for reviews link)
+	url_pattern = re.compile(
+		"^https://steamcommunity.com/id/[a-zA-z0-9]{2,}/recommended/?$")
+	# if not, call self again
+	if not (bool(url_pattern.match(reviews_url))):
+		# let the user know they messed up
+		print("\n\tError: Invalid reviews link "\
+			"(it should look something like:\n\t"\
+			"https://steamcommunity.com/id/JewishJuggernaut/recommended/).\n")
+		return run_with_target(driver)
 	# give awards to that url
 	give_awards(driver, reviews_url)
 	# alert them it's finished giving awards for that user
-	print("\n\tAwards successfully given.")
+	print("\n\tAwards successfully given.\n")
 	return
 
 def main():
