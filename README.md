@@ -4,7 +4,6 @@ For those who want to give out large numbers of awards, without having to click 
 ## Technologies
 * Python 3.X
 * Selenium
-* win10toast
 * A few more basics
 
 ## Installation
