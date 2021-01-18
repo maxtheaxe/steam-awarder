@@ -126,9 +126,10 @@ def give_review_awards(driver):
 
 # give_individual_award() - gives individual award for given review (modal already open)
 def give_individual_award(driver):
-	# store any "ungiven" individual award buttons on popup in list
+	# store any (<300) "ungiven" individual award buttons on popup in list
+	# identifies all buttons that also contain "300" text within a child span
 	review_awards = driver.find_elements_by_xpath(
-		"//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa']")
+		"//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa' and ./span[contains(text(), '300')]]")
 	# testing
 	# print("\treview awards: ", review_awards)
 	# if there are any left "ungiven"
@@ -144,8 +145,9 @@ def give_individual_award(driver):
 	# find and click next twice (next, give award)
 	for i in range(2):
 		next_button = driver.find_element_by_xpath(
-			"//button[@class='awardmodal_SubmitButton_2FENd unstyledbutton_UnstyledButton_1hcJa']")
-		next_button.click()
+			"//button[@title='Spend Steam Points and give the award']")
+		# next_button.click()
+		print("next button: ", next_button)
 	# click the close button to exit modal overlay
 	driver.find_element_by_class_name('closeButton').click()
 	# return True to indicate one was given successfully (or at least one could've been)
