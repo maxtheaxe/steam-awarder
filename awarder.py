@@ -31,6 +31,11 @@ parser.add_argument(
 	type = int,
 	default = None,
 	help = 'input custom limit for max number of pages to award')
+parser.add_argument(
+	'--costlimit',
+	type = bool,
+	default = True,
+	help = 'remove 300 point cost limit for awards')
 args = parser.parse_args()
 
 # launch() - launch sequence to get driver started, bring to login page
@@ -125,11 +130,16 @@ def give_review_awards(driver):
 	return result
 
 # give_individual_award() - gives individual award for given review (modal already open)
-def give_individual_award(driver):
-	# store any (<300) "ungiven" individual award buttons on popup in list
-	# identifies all buttons that also contain "300" text within a child span
-	review_awards = driver.find_elements_by_xpath(
-		"//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa' and ./span[contains(text(), '300')]]")
+def give_individual_award(driver, cost_limit = True):
+	# if cost limit still enabled
+	if (cost_limit == True):
+		# store any (<300) "ungiven" individual award buttons on popup in list
+		# identifies all buttons that also contain "300" text within a child span
+		review_awards = driver.find_elements_by_xpath(
+			"//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa' and ./span[contains(text(), '300')]]")
+	else:
+		# store any "ungiven" individual award buttons on popup in list
+		review_awards = driver.find_element_by_xpath("//button[@class='awardmodal_Button_3M92h unstyledbutton_UnstyledButton_1hcJa']")
 	# testing
 	# print("\treview awards: ", review_awards)
 	# if there are any left "ungiven"
