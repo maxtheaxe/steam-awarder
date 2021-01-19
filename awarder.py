@@ -62,7 +62,7 @@ def start_driver(headless = False):
 	return webdriver.Chrome(options = options, executable_path = chromedriver)
 
 # give_awards() - gives all possible rewards for all reviews for a given user
-def give_awards(driver, given_url, max_pages = 3):
+def give_awards(driver, given_url, max_pages = 3, cost_limit = True):
 	# navigate to given url (should be reviews page)
 	driver.get(given_url)
 	# for a maximum of given number of pages of reviews (default 3)
@@ -79,7 +79,7 @@ def give_awards(driver, given_url, max_pages = 3):
 				# click the current button
 				award_buttons[i].click()
 				# run give review awards and store result
-				result = give_review_awards(driver)
+				result = give_review_awards(driver, cost_limit)
 				# if result is false, break out of loop
 				if (result == False):
 					break
@@ -115,14 +115,14 @@ def advance_page(driver):
 	return True
 
 # give_review_awards() - gives all rewards for a given review
-def give_review_awards(driver):
+def give_review_awards(driver, cost_limit = True):
 	# wait for modal overlay to appear (looks for class)
 	wait = WebDriverWait(driver, 10)
 	element = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'FullModalOverlay')))
 	# manual wait for steam server issues
 	time.sleep(3)
 	# try to give an individual award and store the result
-	result = give_individual_award(driver)
+	result = give_individual_award(driver, cost_limit)
 	# wait for modal overlay to close
 	wait2 = WebDriverWait(driver, 10)
 	element2 = wait2.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'FullModalOverlay')))
@@ -164,7 +164,7 @@ def give_individual_award(driver, cost_limit = True):
 	return True
 
 # run_with_target() - takes in a url from cli and gives awards to that user
-def run_with_target(driver, reviews_url = None, max_pages = 3):
+def run_with_target(driver, reviews_url = None, max_pages = 3, cost_limit = True):
 	# if link was passed as an argument (probably loaded from file)
 	if (reviews_url != None):
 		# then print link currently being tested 
@@ -195,9 +195,9 @@ def run_with_target(driver, reviews_url = None, max_pages = 3):
 		print("\n\tError: Invalid reviews link "\
 			"(it should look something like:\n\t"\
 			"https://steamcommunity.com/id/JewishJuggernaut/recommended/).\n")
-		return run_with_target(driver, None, max_pages)
+		return run_with_target(driver, None, max_pages, cost_limit)
 	# give awards to that url
-	give_awards(driver, reviews_url, max_pages)
+	give_awards(driver, reviews_url, max_pages, cost_limit)
 	# alert them it's finished giving awards for that user
 	print("\n\tAwards successfully given.\n")
 	return
@@ -227,18 +227,18 @@ def main():
 			# if a custom page limit is provided
 			if (args.pagelimit != None):
 				# give awards to each in list with custom limit
-				run_with_target(main_driver, url_list[i], max_pages = args.pagelimit)
+				run_with_target(main_driver, url_list[i], max_pages = args.pagelimit, cost_limit = args.costlimit)
 			else: # otherwise use default
 				# give awards to each in list
-				run_with_target(main_driver, url_list[i])
+				run_with_target(main_driver, url_list[i], cost_limit = args.costlimit)
 	# otherwise, get links to reviews pages from user input
 	else:
 		while True:
 			# if a custom page limit is provided
 			if (args.pagelimit != None):
-				run_with_target(main_driver, max_pages = args.pagelimit)
+				run_with_target(main_driver, max_pages = args.pagelimit, cost_limit = args.costlimit)
 			else: # otherwise use default
-				run_with_target(main_driver)
+				run_with_target(main_driver, cost_limit = args.costlimit)
 
 if __name__ == '__main__':
 	main()
