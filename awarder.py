@@ -146,8 +146,8 @@ def give_individual_award(driver):
 	for i in range(2):
 		next_button = driver.find_element_by_xpath(
 			"//button[@title='Spend Steam Points and give the award']")
-		# next_button.click()
-		print("next button: ", next_button)
+		next_button.click()
+		# print("next button: ", next_button)
 	# click the close button to exit modal overlay
 	driver.find_element_by_class_name('closeButton').click()
 	# return True to indicate one was given successfully (or at least one could've been)
